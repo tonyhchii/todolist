@@ -17,4 +17,12 @@ export class todoItem {
         this.dueDate = dueDate;
         this.priority = priority;
     }
+
+    getTitle() {
+        return this.title;
+    }
+
+    getDescription() {
+        return this.description;
+    }
 }

@@ -1,3 +1,4 @@
-import { todoItem } from "./todoItem";
+import { displayToDo } from "./modules/todoListDOM";
+
 
 

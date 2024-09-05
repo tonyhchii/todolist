@@ -6,7 +6,8 @@ export class project {
 
     }
 
-    addToDo(todo) {
+    addToDo(title,description,dueDate,priority) {
+        const todo = new todoItem(title,description,dueDate,priority);
         this.todoList.push(todo);
     }
 }
