@@ -6,6 +6,7 @@ const todoBody = document.querySelector('.todoBody');
 const project1 = new project('Today');
 project1.addToDo('To Do','Make a Todo List','3','4');
 project1.addToDo('Button','Add a button that adds new ToDos','3','4');
+
 export function displayToDo () {
 
     const projHeader = document.createElement('h1');
@@ -35,5 +36,3 @@ export function displayToDo () {
     })
    
 }
-
-displayToDo();

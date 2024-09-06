@@ -15,3 +15,14 @@ export class project {
         this.todoList.splice(index, 1);
     }
 }
+
+export class projects {
+    projectList = [] 
+    constructor() {
+    }
+
+    addProject(name) {
+        const newProject = new project(name);
+        this.projectList.push(newProject);
+    }
+}
