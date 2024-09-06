@@ -1,5 +1,6 @@
 import { project } from "./project";
 import { displayToDo } from "./todoListDOM";
+import { displayAddDialog } from "./dialogBoxDOM";
 
 const defaultContainer = document.querySelector('.default');
 const projectsContainer = document.querySelector('.projects');
@@ -45,6 +46,11 @@ function displayAddTask() {
     const addTaskButton = document.createElement('button');
     addTaskButton.textContent = 'Add Task';
     defaultContainer.appendChild(addTaskButton);
+    addTaskButton.addEventListener('click', () => {
+        const dialog = document.querySelector('dialog');
+        dialog.showModal();
+    })
 }
 
 displaySideBar();
+displayAddDialog();
