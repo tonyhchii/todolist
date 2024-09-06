@@ -25,4 +25,12 @@ export class projects {
         const newProject = new project(name);
         this.projectList.push(newProject);
     }
+
+    removeProject(index) {
+        this.projectList.splice(index, 1);
+    }
+
+    getProject(index) {
+        return projectList[index];
+    }
 }

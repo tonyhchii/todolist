@@ -3,3 +3,26 @@
     justify-content: flex-start;
     gap: .5rem;
 }
+
+.default {
+    display: grid;
+}
+
+.profile {
+    padding-top: 2rem;
+    padding-left: .5rem;
+    padding-bottom: 1rem;
+    font-weight: bold;
+}
+
+
+
+.sideBar button {
+    padding-left: .5rem;
+    padding: 1rem;
+    text-align: left;
+}
+
+.profile button {
+    padding: 0rem;
+}

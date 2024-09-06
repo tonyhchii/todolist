@@ -12,6 +12,7 @@ function displayDefault() {
 
     //profile row
     displayProfile();
+    displayAddTask();
     displayToday();
 }
 
@@ -37,8 +38,13 @@ function displayToday() {
     const todayButton = document.createElement('button');
     todayButton.textContent = 'Today';
     defaultContainer.appendChild(todayButton);
-
     todayButton.addEventListener('click', displayToDo);
+}
+
+function displayAddTask() {
+    const addTaskButton = document.createElement('button');
+    addTaskButton.textContent = 'Add Task';
+    defaultContainer.appendChild(addTaskButton);
 }
 
 displaySideBar();
