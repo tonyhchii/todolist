@@ -1,6 +1,7 @@
-import { project } from "./project";
+import { searchDate } from "../project";
 import { displayToDo } from "./todoListDOM";
 import { displayAddDialog } from "./dialogBoxDOM";
+import { Project } from "../project";
 
 const defaultContainer = document.querySelector('.default');
 const projectsContainer = document.querySelector('.projects');
@@ -39,7 +40,9 @@ function displayToday() {
     const todayButton = document.createElement('button');
     todayButton.textContent = 'Today';
     defaultContainer.appendChild(todayButton);
-    todayButton.addEventListener('click', displayToDo);
+    todayButton.addEventListener('click', () => {
+        displayToDo(new Project('Today', searchDate()));
+    });
 }
 
 function displayAddTask() {
@@ -51,6 +54,3 @@ function displayAddTask() {
         dialog.showModal();
     })
 }
-
-displaySideBar();
-displayAddDialog();

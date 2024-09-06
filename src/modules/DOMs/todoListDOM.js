@@ -1,32 +1,28 @@
-import { project } from "./project";
-
 const todoHeader = document.querySelector('.todoHeader');
 const todoBody = document.querySelector('.todoBody');
 
-const project1 = new project('Today');
-project1.addToDo('To Do','Make a Todo List','3','4');
-project1.addToDo('Button','Add a button that adds new ToDos','3','4');
 
-export function displayToDo () {
-
-    displayHeader();
-    displayBody();
-
+export function displayToDo (project) {
+    displayHeader(project.name);
+    displayBody(project);
 }
 
 
-function displayHeader() {
+function displayHeader(name) {
     todoHeader.innerHTML = "";
     const projHeader = document.createElement('h1');
-    projHeader.textContent = project1.name;
+    projHeader.textContent = name
     todoHeader.appendChild(projHeader);
 }
 
-function displayBody() {
+function displayBody(project) {
     todoBody.innerHTML = "";
-    project1.todoList.forEach(todo => {
-        createCard(todo);
-    })
+    if (!project == 'undefined') {
+        project.todoList.forEach(todo => {
+            createCard(todo);
+        })
+    }
+    
 }
 
 function createCard(todo) {

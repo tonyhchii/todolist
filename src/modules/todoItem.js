@@ -1,6 +1,6 @@
 export class todoItem {
-    constructor (title, description, dueDate, priority) {
-        this.title = title;
+    constructor (task, description, dueDate, priority) {
+        this.task = task;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
@@ -11,8 +11,8 @@ export class todoItem {
         this.completed = !this.completed;
     }
 
-    setTodo(title,description,dueDate,priority) {
-        this.title = title;
+    setTodo(task,description,dueDate,priority) {
+        this.task = task;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
