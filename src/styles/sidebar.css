@@ -15,14 +15,24 @@
     font-weight: bold;
 }
 
-
-
-.sideBar button {
-    padding-left: .5rem;
-    padding: 1rem;
-    text-align: left;
-}
-
 .profile button {
     padding: 0rem;
+}
+
+.project-list {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    list-style: none;
+}
+
+.active-project {
+    font-weight: 700;
+}
+
+.list-item {
+    cursor: pointer;
+}
+
+.list-item:hover {
+    opacity: 0.7;
 }

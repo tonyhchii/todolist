@@ -7,9 +7,56 @@
 
 .container {
     display:grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 30% 70%;
 }
 
 dialog {
     padding: 2rem;
+}
+
+body {
+    font-size: 1.5rem;
+    font-weight: 300;
+    font-family: sans-serif;
+}
+
+form {
+    display: flex;
+}
+
+.new-input {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    border-bottom: 1px solid currentColor;
+    font-size: inherit;
+    outline: none;
+
+    transition: border-bottom 150ms ease-in;
+    order: 2;
+}
+
+.new-input.project {
+    font-size: 1.1rem;
+}
+
+.new-input:focus{
+    border-bottom-width: 3px;
+}
+
+.new:focus::placeholder {
+    font-weight: 700;
+}
+
+.btn {
+    cursor: pointer;
+    background: 0;
+    color: inherit;
+}
+
+.btn.create {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin-right: 0.25em;
+    transition: opacity 250ms ease-in;
 }

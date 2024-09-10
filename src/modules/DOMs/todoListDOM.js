@@ -3,8 +3,10 @@ const todoBody = document.querySelector('.todoBody');
 
 
 export function displayToDo (project) {
-    displayHeader(project.name);
-    displayBody(project);
+    if (typeof project != undefined){
+        displayHeader(project.name);
+        displayBody(project);
+    }
 }
 
 
@@ -17,7 +19,7 @@ function displayHeader(name) {
 
 function displayBody(project) {
     todoBody.innerHTML = "";
-    if (!project == 'undefined') {
+    if (project.todoList.length > 0) {
         project.todoList.forEach(todo => {
             createCard(todo);
         })

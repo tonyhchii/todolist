@@ -9,7 +9,7 @@ import {
 
   const date = new Date();
 
-class Projects {
+export class Projects {
     ProjectList = [] 
     constructor() {
     }
@@ -26,6 +26,18 @@ class Projects {
         return ProjectList[index];
     }
 
+    searchDate() {
+        return allToDos().filter((task) => isToday(task.dueDate) && task.completed === false);
+    }
+
+    allToDos() {
+        const allTasks = [];
+        allProjects.ProjectList.forEach((Project) => {
+            Project.todoList.forEach((task) => allTasks.push(task));
+        });
+    
+        return allTasks;
+    }
 }
 
 const allProjects = new Projects();
@@ -47,17 +59,7 @@ export class Project {
         this.todoList.splice(index, 1);
     }
 
-}
-
-export function searchDate() {
-    allToDos().filter((task) => isToday(task.dueDate) && task.completed === false);
-}
-
-function allToDos() {
-    const allTasks = [];
-    allProjects.ProjectList.forEach((Project) => {
-        Project.todoList.forEach((task) => allTasks.push(task));
-    });
-
-    return allTasks;
+    setToDo(array) {
+        this.todolist = array;
+    }
 }
