@@ -1,4 +1,4 @@
-import { searchDate } from "../project";
+
 import { displayToDo } from "./todoListDOM";
 import { Projects } from "../project";
 

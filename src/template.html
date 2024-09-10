@@ -11,17 +11,16 @@
             <div class="default-tasks"></div>
             <div class="projects">
                 <h2 class="task-list-title">My Projects</h1>
-                <ul class="project-list">
-                    <li class="list-item">Demo Task</li>
-                    <li class="list-item active-project">Demo Task 2</li>
+                <ul class="project-list" data-lists>
                 </ul>
-
-                <form action="">
-                    <input type="text"
-                     class="new-input project"
-                     placeholder="new project name"
-                     aria-label="new project name">
-                     <button class="btn create" aria-label="add new project">+</button>
+                <form action="" data-new-list-form>
+                    <input 
+                    type="text"
+                    data-new-list-input
+                    class="new-input project"
+                    placeholder="new project name"
+                    aria-label="new project name">
+                    <button class="btn create" aria-label="add new project">+</button>
                 </form>
             </div>
         </div>

@@ -1,8 +1,82 @@
-import { project } from "./project";
+import trashCan from '../img/trash-can-outline.svg';
+import plusSign from '../img/plus.svg';
 
-const currProject = new project('Today');
-currProject.addToDo('To Do','Make a Todo List','3','4');
-currProject.addToDo('Button','Add a button that adds new ToDos','3','4');
+const listsContainer = document.querySelector('[data-lists]');
+const newListForm = document.querySelector('[data-new-list-form]');
+const newListInput = document.querySelector('[data-new-list-input]');
 
-displaySideBar();
-displayToDo(currProject);
+const LOCAL_STORAGE_LIST_KEY = 'task.lists';
+const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId'
+
+let lists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [];
+let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY);
+    
+newListForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const listName = newListInput.value;
+    if (listName == null || listName === '') return;
+    const list = createList(listName)
+    newListInput.value = null;
+    lists.push(list)
+    saveAndRender()
+})
+
+listsContainer.addEventListener('click', e => {
+    if(e.target.tagName.toLowerCase() === 'li') {
+        selectedListId = e.target.dataset.listId;
+        saveAndRender();
+    }
+    if(e.target.tagName.toLowerCase() === 'img') {
+        deleteList(e.target.id);
+    }
+})
+
+function createList(name) {
+    return { id: Date.now().toString(), name: name, tasks:[] } 
+}
+
+export function saveAndRender(){
+    save();
+    render();
+}
+
+function save() {
+    localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(lists));
+    localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId);
+}
+
+function render() {
+    clearElement(listsContainer);
+    lists.forEach(list => {
+        const listElement = document.createElement("li");
+        listElement.dataset.listId = list.id;
+        listElement.classList.add('list-item');
+        listElement.innerHTML = '<img src='+ plusSign + '>' + list.name;
+        if (list.id === selectedListId) {
+            listElement.classList.add('active-project')
+        }
+        
+        const removeButton = document.createElement("button");
+        removeButton.classList.add('btn');
+        
+        const trashImg = document.createElement('img');
+        trashImg.src = trashCan;
+        trashImg.alt = "trash";
+        trashImg.id = list.id;
+        removeButton.appendChild(trashImg);
+        listElement.appendChild(removeButton);
+
+        listsContainer.appendChild(listElement);
+    })
+}
+
+function clearElement(element) {
+    while (element.firstChild) {
+        element.removeChild(element.firstChild);
+    }
+}
+
+function deleteList (buttonID) {
+    lists = lists.filter(list => list.id !== buttonID);
+    saveAndRender();
+}
