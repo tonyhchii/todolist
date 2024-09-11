@@ -1,22 +1,22 @@
 .profile {
     display: flex;
     justify-content: flex-start;
+    font-weight: 400;
     gap: .5rem;
+    margin-bottom: 1.5rem;
 }
 
 .default {
     display: grid;
 }
 
-.profile {
-    padding-top: 2rem;
-    padding-left: .5rem;
-    padding-bottom: 1rem;
-    font-weight: bold;
-}
 
 .profile img {
     width: 1rem;
+}
+
+.profile .new-input {
+    width: 200px;
 }
 
 .profile button {
@@ -27,6 +27,10 @@
     font-size: 1.2rem;
     line-height: 1.7;
     list-style: circle;
+}
+
+.default-list {
+    font-size: 1.6rem;
 }
 
 .active-project {
@@ -45,4 +49,11 @@
 
 .list-item img {
     width: 1rem;
+}
+
+.task-list-title {
+    font-size: 2rem;
+    text-align: center;
+    font-weight: 700;
+    margin-top: 2rem;
 }

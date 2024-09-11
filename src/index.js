@@ -5,4 +5,3 @@ import "./styles/sidebar.css";
 import { saveAndRender } from "./modules/controller";
 
 saveAndRender();
-

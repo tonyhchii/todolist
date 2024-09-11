@@ -7,19 +7,19 @@
 </head>
 <body>
     <div class="container">
-        <div class="sideBar">
+        <div class="sideBar" data-sidebar>
             <div class="profile">
-                <p class="user-name">Your Username</p>
+                <p class="user-name" data-username>Your Username</p>
                 <img src="./img/pencil-outline.svg">
             </div>
             <div class="default-tasks">
                 <ul class="default-list"data-default>
-                    <li class="list-item">Today</li>
-                    <li class="list-item">Completed</li>
+                    <li data-list-id='00' id='00' class="list-item">Today</li>
+                    <li data-list-id="01" id='01' class="list-item">Completed</li>
                 </ul>
             </div>
             <div class="projects">
-                <h2 class="task-list-title">My Projects</h1>
+                <h4 class="task-list-title">My Projects</h4>
                 <ul class="project-list" data-lists>
                 </ul>
                 <form action="" data-new-list-form>
@@ -77,6 +77,18 @@
             </div>
             <div class="task-btns"></div>
         </div>
+    </template>
+    <template id="form-template">
+        <div class ="form">
+            <form action="">
+                <input type="text" class="new-input">
+                <button class="btn"></button>
+            </form>
+        </div>
+    </template>
+    <template id="profile-template">
+            <p class="user-name" data-username></p>
+            <img src="./img/pencil-outline.svg">
     </template>
 </body>
 </html>

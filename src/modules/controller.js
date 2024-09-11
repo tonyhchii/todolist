@@ -1,14 +1,12 @@
-import trashCan from '../img/trash-can-outline.svg';
-import plusSign from '../img/plus.svg';
-import editSign from '../img/pencil-outline.svg';
-
 import { Project } from './project';
 import { todoItem } from './todoItem';
-import { clearElement} from './DOMs/task-listDOM';
 import { render } from './DOMs/project-listDOM';
 import { resetDialog } from './DOMs/dialog-formDOM';
 
-const listsContainer = document.querySelector('[data-lists]');
+const { startOfToday } = require("date-fns");
+const today = startOfToday().toISOString().substring(0,10);
+
+const sideBarContainer = document.querySelector('[data-sidebar]');
 const newListForm = document.querySelector('[data-new-list-form]');
 const newListInput = document.querySelector('[data-new-list-input]');
 
@@ -16,21 +14,27 @@ const newListInput = document.querySelector('[data-new-list-input]');
 //const listTitleElement = document.querySelector('[data-list-title]');
 const tasksContainer = document.querySelector('[data-tasks]');
 
-const createTaskBtn = document.querySelector('.create-task');
+
 const dialogContainer = document.querySelector('.task-form dialog');
 const dialogForm = document.querySelector('[data-dialog-form]');
 const dialogNameInput = document.querySelector('[data-dialog-name-input]');
 const dialogDesInput = document.querySelector('[data-dialog-description-input]');
 const dialogDateInput = document.querySelector('[data-dialog-date-input]');
 const dialogPriorityInput = document.querySelector('[data-dialog-priority-input]')
-const defaultListDisplay = document.querySelector('[data-default]')
+
+const profileContainer = document.querySelector('.profile');
+const profileTemplate = document.getElementById('profile-template');
+const formTemplate = document.getElementById('form-template');
+
 
 const LOCAL_STORAGE_LIST_KEY = 'task.lists';
-const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId'
+const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId';
+const LOCAL_STORAGE_USERNAME = 'task.username';
 
 let JSONlists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [];
-let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY);
+let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY) || '00';
 let currSelectedTask = null;
+let username = localStorage.getItem(LOCAL_STORAGE_USERNAME);
 
 // const today = startOfToday().toISOString().substring(0,10);
 
@@ -43,38 +47,42 @@ function loadList() {
     return allProjects;
 }
 
-let lists = loadList();
+let lists = JSONlists == [] ? [] : loadList();
+let defaultLists = [];
 
+function loadDefaultList() {
+    searchCompleted();
+    searchToday();
+}
+loadDefaultList();
+
+
+
+//Adding Task with Dialog Box
 dialogForm.addEventListener('submit', e => {
     e.preventDefault();
     const taskName = dialogNameInput.value;
-        const taskDes = dialogDesInput.value;
-        const taskDate = dialogDateInput.value;
-        const taskPriority = dialogPriorityInput.value;
-        if (currSelectedTask) {
-            currSelectedTask.name = taskName;
-            currSelectedTask.dueDate = taskDate;
-            currSelectedTask.description = taskDes;
-            currSelectedTask.priority = taskPriority;
-            currSelectedTask = null;
-        } else {
+    const taskDes = dialogDesInput.value;
+    const taskDate = dialogDateInput.value;
+    const taskPriority = dialogPriorityInput.value;
+    if (currSelectedTask) {
+        currSelectedTask.name = taskName;
+        currSelectedTask.dueDate = taskDate;
+        currSelectedTask.description = taskDes;
+        currSelectedTask.priority = taskPriority;
+        currSelectedTask = null;
+    } else {
 
-            const newTask = new todoItem(Date.now().toString(),taskName,taskDes,taskDate,taskPriority);
-            const selectedList = getCurrList();
-            selectedList.tasks.push(newTask);
-        }
-        resetDialog();
-        saveAndRender();
+        const newTask = new todoItem(Date.now().toString(),taskName,taskDes,taskDate,taskPriority);
+        const selectedList = selectedListId == '00' ? searchToday() : getCurrList();
+        selectedList.tasks.push(newTask);
+    }
+    resetDialog();
+    saveAndRender();
 });
 
-dialogForm.querySelector('.close').addEventListener('click', () => {
-    dialogContainer.close();
-});
 
-createTaskBtn.addEventListener('click', () => {
-    dialogContainer.showModal();
-})
-
+//Adding project with project
 newListForm.addEventListener('submit', e => {
     e.preventDefault();
     const listName = newListInput.value;
@@ -85,7 +93,24 @@ newListForm.addEventListener('submit', e => {
     saveAndRender()
 })
 
-listsContainer.addEventListener('click', e => {
+profileContainer.addEventListener('click', e => {
+    if(e.target.tagName.toLowerCase() === 'img') {
+        const newInput = document.importNode(formTemplate.content, true);
+        const profileUserName = document.querySelector('.user-name');
+        const input = newInput.querySelector('input');
+        input.value = profileUserName.textContent;
+        profileContainer.innerHTML = "";
+        profileContainer.appendChild(newInput);
+    }
+});
+
+profileContainer.addEventListener('submit', e => {
+    e.preventDefault();
+    username = profileContainer.querySelector('input').value;
+})
+
+//changing project;
+sideBarContainer.addEventListener('click', e => {
     if(e.target.tagName.toLowerCase() === 'li') {
         selectedListId = e.target.dataset.listId;
         saveAndRender();
@@ -96,17 +121,10 @@ listsContainer.addEventListener('click', e => {
     }
 })
 
-defaultListDisplay.addEventListener('click', e => {
-    if(e.target.tagName.toLowerCase() === 'li') {
-        selectedListId = e.target.dataset.listId;
-        render(lists,searchCompleted(),selectedListId)
-    }
-});
 
 tasksContainer.addEventListener('click', e => {
     if(e.target.tagName.toLowerCase() === 'input') {
         const selectedTask = getTask(e.target.id);
-        console.log(getTask(e.target.id))
         selectedTask.completed = e.target.checked;
         saveAndRender();
     }
@@ -120,31 +138,46 @@ tasksContainer.addEventListener('click', e => {
     }
 })
 
+function renderUserName() {
+    const newUser = document.importNode(profileTemplate.content, true);
+    const usernameP = newUser.querySelector('p');
+    usernameP.textContent = username;
+    profileContainer.innerHTML = "";
+    profileContainer.appendChild(newUser);
+}
+
 
 export function saveAndRender(){
     save();
-    render(lists, getCurrList(), selectedListId);
+    if (selectedListId == '00'){
+        render(defaultLists, lists, searchToday(), selectedListId);
+    } else if (selectedListId == '01') {
+        render(defaultLists, lists, searchCompleted(), selectedListId);
+    } else {
+        render(defaultLists, lists, getCurrList(), selectedListId);
+    }
+    renderUserName();
 }
 
 function save() {
     localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(lists));
     localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId);
+    localStorage.setItem(LOCAL_STORAGE_USERNAME, username);
 }
 
+function searchToday() {
+    const todayList = new Project('00', 'Today', []);
+    lists.forEach(list => {
+        list.tasks.forEach(task => {
+            if (task.dueDate == today) {
+                todayList.tasks.push(task);
+            }
+        })
+    })
 
-
-/* function renderSelectedList() {
-    const selectedList = lists.find(list => list.id === selectedListId);
-
-    if (!selectedList) {
-        listDisplayContainer.style.display = 'none';
-    } else {
-        listDisplayContainer.style.display = '';
-        listTitleElement.innerText = selectedList.name;
-        clearElement(tasksContainer);
-        renderTasks(selectedList);
-    }
-} */
+    defaultLists[0] = todayList;
+    return todayList;
+}
 
 function searchCompleted() {
     const completedList = new Project('01', 'Completed', []);
@@ -155,74 +188,9 @@ function searchCompleted() {
             }
         })
     });
-
+    defaultLists[1] = completedList;
     return completedList;
 }
-
-/* function renderLists() {
-    lists.forEach(list => {
-        const listElement = document.createElement("li");
-        listElement.dataset.listId = list.id;
-        listElement.classList.add('list-item');
-        listElement.innerHTML = '<img src='+ plusSign + '>' + list.name;
-        if (list.id === selectedListId) {
-            listElement.classList.add('active-project')
-        }
-        
-        const removeButton = document.createElement("button");
-        removeButton.classList.add('btn');
-        
-        const trashImg = document.createElement('img');
-        trashImg.src = trashCan;
-        trashImg.alt = "trash";
-        trashImg.id = list.id;
-        removeButton.appendChild(trashImg);
-        listElement.appendChild(removeButton);
-
-        listsContainer.appendChild(listElement);
-    });
-} */
-
-/* function renderTasks(selectedList) {
-    selectedList.tasks.forEach(task => {
-        const taskElement = document.importNode(taskTemplate.content, true);
-        const checkbox = taskElement.querySelector('input');
-        checkbox.id = task.id;
-        checkbox.checked = task.completed;
-
-        const label = taskElement.querySelector('label');
-        label.htmlFor = task.id;
-        label.append(task.name);
-
-        const taskDes = taskElement.querySelector('.task-des');
-        const labelDescription = document.createElement('p');
-        labelDescription.textContent = task.description;
-        taskDes.append(labelDescription);
-
-        const trashImg = document.createElement('img');
-        trashImg.src = trashCan;
-        trashImg.alt = "trash";
-        trashImg.id = task.id;
-
-        const editImg = document.createElement('img');
-        editImg.src = editSign;
-        editImg.alt = "edit";
-        editImg.id = task.id;
-
-        const taskButtons = taskElement.querySelector('.task-btns');
-        taskButtons.append(editImg);
-        taskButtons.append(trashImg);
-
-
-        tasksContainer.appendChild(taskElement);
-    })
-} */
-
-/* function clearElement(element) {
-    while (element.firstChild) {
-        element.removeChild(element.firstChild);
-    }
-} */
 
 function deleteList (buttonID) {
     lists = lists.filter(list => list.id !== buttonID);
@@ -248,7 +216,15 @@ function editTask (taskID) {
 }
 
 function getCurrList() {
-    return lists.find(list => list.id === selectedListId);
+    const currList = lists.find(list => list.id === selectedListId);
+    if (!currList) {
+        return getDefaultList();
+    }
+    return currList;
+}
+
+function getDefaultList() {
+    return defaultLists.find(list => list.id === selectedListId);
 }
 
 
@@ -265,4 +241,3 @@ function getTask(taskID) {
         }
     }
 }
-
