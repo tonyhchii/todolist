@@ -4,14 +4,15 @@ import editSign from '../img/pencil-outline.svg';
 
 import { Project } from './project';
 import { todoItem } from './todoItem';
+import { renderSelectedList, clearElement} from './DOMs/task-listDOM';
 const { startOfToday } = require("date-fns");
 
 const listsContainer = document.querySelector('[data-lists]');
 const newListForm = document.querySelector('[data-new-list-form]');
 const newListInput = document.querySelector('[data-new-list-input]');
 
-const listDisplayContainer = document.querySelector('[data-list-display-container]');
-const listTitleElement = document.querySelector('[data-list-title]');
+//const listDisplayContainer = document.querySelector('[data-list-display-container]');
+//const listTitleElement = document.querySelector('[data-list-title]');
 const tasksContainer = document.querySelector('[data-tasks]');
 const taskTemplate = document.getElementById('task-template');
 
@@ -126,10 +127,10 @@ export function render() {
     renderLists();
 
 
-    renderSelectedList();
+    renderSelectedList(getCurrList());
 }
 
-function renderSelectedList() {
+/* function renderSelectedList() {
     const selectedList = lists.find(list => list.id === selectedListId);
 
     if (!selectedList) {
@@ -140,7 +141,7 @@ function renderSelectedList() {
         clearElement(tasksContainer);
         renderTasks(selectedList);
     }
-}
+} */
 
 function renderCompletedList() {
     const completedList = searchCompleted();
@@ -189,7 +190,7 @@ function renderLists() {
     });
 }
 
-function renderTasks(selectedList) {
+/* function renderTasks(selectedList) {
     selectedList.tasks.forEach(task => {
         const taskElement = document.importNode(taskTemplate.content, true);
         const checkbox = taskElement.querySelector('input');
@@ -222,13 +223,13 @@ function renderTasks(selectedList) {
 
         tasksContainer.appendChild(taskElement);
     })
-}
+} */
 
-function clearElement(element) {
+/* function clearElement(element) {
     while (element.firstChild) {
         element.removeChild(element.firstChild);
     }
-}
+} */
 
 function deleteList (buttonID) {
     lists = lists.filter(list => list.id !== buttonID);
