@@ -3,21 +3,22 @@
     border: 0;
     padding: 0;
     box-sizing: border-box;
+    --dark: #464646;
+    --light: #ededed;
 }
 
 .container {
     display:grid;
+    height: 100%;
     grid-template-columns: 30% 70%;
 }
 
-dialog {
-    padding: 2rem;
-}
 
 body {
     font-size: 1.5rem;
     font-weight: 300;
     font-family: sans-serif;
+    height: 100vh;
 }
 
 form {
@@ -59,4 +60,42 @@ form {
     font-weight: 900;
     margin-right: 0.25em;
     transition: opacity 250ms ease-in;
+}
+.btn:hover {
+    color: var(--dark);
+}
+
+.task-form dialog {
+    padding: 2rem;
+    margin: auto;
+    border-radius: 1rem;
+}
+.task-form dialog form {
+    display: grid;
+    gap: 1rem; 
+}
+
+.task-form input, .task-form select{
+    order: 0;
+    padding: 1rem;
+}
+
+.task-form .btn {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 1rem 1.5rem; 
+    border-radius: 1rem;
+    background-color: var(--light);
+}
+
+.task-form .form-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.sideBar {
+    background-color: var(--light);
+    padding: 1rem;
 }
