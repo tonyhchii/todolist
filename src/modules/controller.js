@@ -28,12 +28,22 @@ const defaultListDisplay = document.querySelector('[data-default]')
 const LOCAL_STORAGE_LIST_KEY = 'task.lists';
 const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId'
 
-let lists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [];
+let JSONlists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [];
 let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY);
 let currSelectedTask = null;
 
 // const today = startOfToday().toISOString().substring(0,10);
 
+function loadList() {
+    const allProjects = [];
+    JSONlists.forEach(list => {
+        const project = new Project(list.id, list.name, list.tasks);
+        allProjects.push(project);
+    });
+    return allProjects;
+}
+
+let lists = loadList();
 
 dialogForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -89,16 +99,16 @@ listsContainer.addEventListener('click', e => {
 defaultListDisplay.addEventListener('click', e => {
     if(e.target.tagName.toLowerCase() === 'li') {
         selectedListId = e.target.dataset.listId;
-        renderCompletedList();
+        render(lists,searchCompleted(),selectedListId)
     }
 });
 
 tasksContainer.addEventListener('click', e => {
     if(e.target.tagName.toLowerCase() === 'input') {
-        const selectedList = getCurrList();
-        const selectedTask = selectedList.tasks.find(task => task.id === e.target.id);
+        const selectedTask = getTask(e.target.id);
+        console.log(getTask(e.target.id))
         selectedTask.completed = e.target.checked;
-        save();
+        saveAndRender();
     }
     if(e.target.tagName.toLowerCase() === 'img') {
         const targetID = e.target.id;
@@ -113,7 +123,7 @@ tasksContainer.addEventListener('click', e => {
 
 export function saveAndRender(){
     save();
-    render(lists, selectedListId);
+    render(lists, getCurrList(), selectedListId);
 }
 
 function save() {
@@ -136,22 +146,12 @@ function save() {
     }
 } */
 
-function renderCompletedList() {
-    const completedList = searchCompleted();
-    listTitleElement.innerText = 'Completed';
-    console.log(completedList);
-    clearElement(tasksContainer);
-    if (completedList != []) {    
-        renderTasks(completedList);
-    }
-}
-
 function searchCompleted() {
-    const completedList = [];
+    const completedList = new Project('01', 'Completed', []);
     lists.forEach(list => {
         list.tasks.forEach(task => {
             if (task.completed == true) {
-                completedList.push(task);
+                completedList.tasks.push(task);
             }
         })
     });
@@ -238,10 +238,10 @@ function deleteTask (buttonID) {
     saveAndRender();
 }
 
-function editTask (searchID) {
-    currSelectedTask = getCurrTask(searchID);
+function editTask (taskID) {
+    currSelectedTask = getCurrTask(taskID);
     dialogNameInput.value = currSelectedTask.name;
-    dialogDateInput.value = currSelectedTask.description;
+    dialogDesInput.value = currSelectedTask.description;
     dialogDateInput.value = currSelectedTask.dueDate;
     dialogPriorityInput.value = currSelectedTask.priority;
     dialogContainer.showModal();
@@ -251,7 +251,18 @@ function getCurrList() {
     return lists.find(list => list.id === selectedListId);
 }
 
-function getCurrTask(searchID) {
-    return getCurrList().tasks.find(task => task.id === searchID);
+
+function getCurrTask(taskID) {
+    return getCurrList().findTask(taskID);
+}
+
+function getTask(taskID) {
+    for( let i = 0; i < lists.length; i++ ) {
+        for ( let j = 0; j < lists[i].tasks.length; j++ ) {
+            if (taskID === lists[i].tasks[j].id) {
+                return lists[i].tasks[j];
+            }
+        }
+    }
 }
 

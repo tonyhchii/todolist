@@ -4,7 +4,6 @@ import plusSign from '../../img/plus.svg';
 import editSign from '../../img/pencil-outline.svg';
 import { renderSelectedList, clearElement } from './task-listDOM';
 import { resetDialog } from './dialog-formDOM';
-import { Project } from '../project';
 
 function renderLists(lists, selectedListID) {
     lists.forEach(list => {
@@ -30,9 +29,9 @@ function renderLists(lists, selectedListID) {
     });
 }
 
-export function render(lists,selectedListID) {
+export function render(lists,currList,selectedListID) {
     clearElement(listsContainer);
     resetDialog();
     renderLists(lists,selectedListID);
-    renderSelectedList(lists.find(list => list.id === selectedListID));
+    renderSelectedList(currList);
 }
