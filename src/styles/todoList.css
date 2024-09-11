@@ -130,3 +130,7 @@
 .todo-container {
     margin-right: .5rem;
 }
+
+.hide {
+    display: none;
+}

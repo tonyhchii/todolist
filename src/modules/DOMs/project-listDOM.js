@@ -6,6 +6,7 @@ import { resetDialog } from './dialog-formDOM';
 
 const listsContainer = document.querySelector('[data-lists]');
 const defaultListsContainer = document.querySelector('[data-default]')
+const createTaskButton = document.querySelector('.create-task');
 
 function renderLists(defaultLists, lists, selectedListID) {
     defaultLists.forEach(defaultList => {
@@ -46,9 +47,6 @@ function generateListItem(list, selectedListID) {
     listsContainer.appendChild(listElement);
 }
 
-function generateItem(list, selectedListID) {
-
-}
 
 export function render(defaultLists,lists,currList,selectedListID) {
     clearElement(defaultListsContainer);
@@ -56,4 +54,9 @@ export function render(defaultLists,lists,currList,selectedListID) {
     resetDialog();
     renderLists(defaultLists, lists,selectedListID);
     renderSelectedList(currList);
+    if (selectedListID == '00' || selectedListID == '01'){
+        createTaskButton.classList.add('hide');
+    } else {
+        createTaskButton.classList.remove('hide');
+    }
 }
