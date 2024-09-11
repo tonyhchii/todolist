@@ -29,8 +29,11 @@
 }
 
 .task {
+    display: flex;
+    justify-content: space-between;
     position: relative;
     margin-bottom: 1.25em;
+    align-items: center;
 }
 
 .new-input {
@@ -77,10 +80,11 @@
     border-radius: 2rem;
     transform: scale(1);
     transition: transform 200ms ease-in-out;
+    grid-area: checkbox;
 }
 
 .task:hover .custom-checkbox,
-[type="checkbox"]:focus + label .custom-checkbox {
+[type="checkbox"]:focus + div > label .custom-checkbox {
     transform: scale(1.1);
 }
 
@@ -97,4 +101,37 @@
 [type="checkbox"]:checked + label::after {
     transform: scaleX(1);
     transform-origin: left;
+}
+
+.task-des p {
+    display: inline-flex;
+    position: relative;
+    font-size: .9rem;
+}
+.task-des p::after {
+    content: '' ;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: currentColor;
+    top: 50%;
+    height: 2px;
+
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 150ms ease-in-out
+}
+
+[type="checkbox"]:checked + label + .task-des p::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.task-btns img {
+    width: 1rem;
+}
+
+.task-btns {
+    display: flex;
+    gap: .6rem;
 }

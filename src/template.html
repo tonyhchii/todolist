@@ -8,7 +8,16 @@
 <body>
     <div class="container">
         <div class="sideBar">
-            <div class="default-tasks"></div>
+            <div class="profile">
+                <p class="user-name">Your Username</p>
+                <img src="./img/pencil-outline.svg">
+            </div>
+            <div class="default-tasks">
+                <ul class="default-list"data-default>
+                    <li class="list-item">Today</li>
+                    <li class="list-item">Completed</li>
+                </ul>
+            </div>
             <div class="projects">
                 <h2 class="task-list-title">My Projects</h1>
                 <ul class="project-list" data-lists>
@@ -30,32 +39,43 @@
             </div>
             <div class="todo-body">
                 <div class="tasks" data-tasks>
-                    <div class="task">
-                        <input type="checkbox" id="task-1">
-                        <label for="task-1"><span class="custom-checkbox"></span> Task 1 </label>
-                    </div>
-                    <div class="task">
-                        <input type="checkbox" id="task-2">
-                        <label for="task-2"><span class="custom-checkbox"></span> Task 2 </label>
-                    </div>
-                    <div class="task">
-                        <input type="checkbox" id="task-3">
-                        <label for="task-3"><span class="custom-checkbox"></span> Task 3 </label>
-                    </div>
                 </div>
                 <class class="task-creator">
                     <form action="" data-new-task-form>
-                        <input data-new-task-input type="text" class="new-input task" placeholder="new task name"aria-label="new task name">
-                        <button class="btn create"aria-label="create new task">+</button>
+                        <button type="button" class="btn create create-task"aria-label="create new task">+ Add New Task</button>
                     </form>
                 </class>
             </div>
         </div>
     </div>
+    <div class="task-form">
+        <dialog>
+            <form action="" data-dialog-form>
+                <input data-dialog-name-input class='new-input' placeholder="Task" name="task" required>
+                <input data-dialog-description-input class='new-input' placeholder="Description" name="description" required>
+                <input data-dialog-date-input class='new-input' type="date" name="date" required>
+                <select data-dialog-priority-input class='new-input' name="priority" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+    
+                <div class="form-btns">
+                    <button class="submit btn">Submit</button>
+                    <button type="button"class= "close btn">Close</button>
+                </div>
+                
+            </form>
+        </dialog>
+    </div>
     <template id="task-template">
         <div class="task">
-            <input type="checkbox">
-            <label><span class="custom-checkbox"></span></label>
+            <div class="task-front">
+                <input type="checkbox">
+                <label><span class="custom-checkbox"></span></label>
+                <div class="task-des"></div>
+            </div>
+            <div class="task-btns"></div>
         </div>
     </template>
 </body>
