@@ -30,32 +30,37 @@ const formTemplate = document.getElementById('form-template');
 const LOCAL_STORAGE_LIST_KEY = 'task.lists';
 const LOCAL_STORAGE_SELECTED_LIST_ID_KEY = 'task.selectedListId';
 const LOCAL_STORAGE_USERNAME = 'task.username';
+const LOCAL_STORAGE_DEFAULT_LIST_KEY = 'default.lists';
 
 let JSONlists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [];
 let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY) || '00';
 let currSelectedTask = null;
 let username = localStorage.getItem(LOCAL_STORAGE_USERNAME);
+let JSONDefaultLists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DEFAULT_LIST_KEY)) || [];
 
 // const today = startOfToday().toISOString().substring(0,10);
 
-function loadList() {
+function loadList(JSONList) {
     const allProjects = [];
-    JSONlists.forEach(list => {
+    JSONList.forEach(list => {
         const project = new Project(list.id, list.name, list.tasks);
         allProjects.push(project);
     });
     return allProjects;
 }
 
-let lists = JSONlists == [] ? [] : loadList();
-let defaultLists = [];
-
 function loadDefaultList() {
-    searchCompleted();
     searchToday();
+    searchCompleted();
 }
+
+let lists = JSONlists == [] ? [] : loadList(JSONlists);
+
+
+let defaultLists = [];
 loadDefaultList();
 
+renderUserName();
 
 
 //Adding Task with Dialog Box
@@ -107,6 +112,7 @@ profileContainer.addEventListener('click', e => {
 profileContainer.addEventListener('submit', e => {
     e.preventDefault();
     username = profileContainer.querySelector('input').value;
+    renderUserName();
 })
 
 //changing project;
@@ -144,6 +150,7 @@ function renderUserName() {
     usernameP.textContent = username;
     profileContainer.innerHTML = "";
     profileContainer.appendChild(newUser);
+    save();
 }
 
 
@@ -156,13 +163,13 @@ export function saveAndRender(){
     } else {
         render(defaultLists, lists, getCurrList(), selectedListId);
     }
-    renderUserName();
 }
 
 function save() {
     localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(lists));
     localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId);
     localStorage.setItem(LOCAL_STORAGE_USERNAME, username);
+    localStorage.setItem(LOCAL_STORAGE_DEFAULT_LIST_KEY, defaultLists);
 }
 
 function searchToday() {
