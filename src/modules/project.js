@@ -1,4 +1,3 @@
-
 export class Project {
     
     constructor(id, name, tasks) {

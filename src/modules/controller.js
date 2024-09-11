@@ -4,8 +4,9 @@ import editSign from '../img/pencil-outline.svg';
 
 import { Project } from './project';
 import { todoItem } from './todoItem';
-import { renderSelectedList, clearElement} from './DOMs/task-listDOM';
-const { startOfToday } = require("date-fns");
+import { clearElement} from './DOMs/task-listDOM';
+import { render } from './DOMs/project-listDOM';
+import { resetDialog } from './DOMs/dialog-formDOM';
 
 const listsContainer = document.querySelector('[data-lists]');
 const newListForm = document.querySelector('[data-new-list-form]');
@@ -14,7 +15,6 @@ const newListInput = document.querySelector('[data-new-list-input]');
 //const listDisplayContainer = document.querySelector('[data-list-display-container]');
 //const listTitleElement = document.querySelector('[data-list-title]');
 const tasksContainer = document.querySelector('[data-tasks]');
-const taskTemplate = document.getElementById('task-template');
 
 const createTaskBtn = document.querySelector('.create-task');
 const dialogContainer = document.querySelector('.task-form dialog');
@@ -32,7 +32,7 @@ let lists = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || [];
 let selectedListId = localStorage.getItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY);
 let currSelectedTask = null;
 
-const today = startOfToday().toISOString().substring(0,10);
+// const today = startOfToday().toISOString().substring(0,10);
 
 
 dialogForm.addEventListener('submit', e => {
@@ -113,7 +113,7 @@ tasksContainer.addEventListener('click', e => {
 
 export function saveAndRender(){
     save();
-    render();
+    render(lists, selectedListId);
 }
 
 function save() {
@@ -121,14 +121,7 @@ function save() {
     localStorage.setItem(LOCAL_STORAGE_SELECTED_LIST_ID_KEY, selectedListId);
 }
 
-export function render() {
-    clearElement(listsContainer);
-    resetDialog();
-    renderLists();
 
-
-    renderSelectedList(getCurrList());
-}
 
 /* function renderSelectedList() {
     const selectedList = lists.find(list => list.id === selectedListId);
@@ -166,7 +159,7 @@ function searchCompleted() {
     return completedList;
 }
 
-function renderLists() {
+/* function renderLists() {
     lists.forEach(list => {
         const listElement = document.createElement("li");
         listElement.dataset.listId = list.id;
@@ -188,7 +181,7 @@ function renderLists() {
 
         listsContainer.appendChild(listElement);
     });
-}
+} */
 
 /* function renderTasks(selectedList) {
     selectedList.tasks.forEach(task => {
@@ -262,8 +255,3 @@ function getCurrTask(searchID) {
     return getCurrList().tasks.find(task => task.id === searchID);
 }
 
-function resetDialog() {
-    dialogContainer.close()
-    dialogForm.reset()
-    dialogDateInput.value = today;
-}
